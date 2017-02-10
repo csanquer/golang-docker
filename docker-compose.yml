@@ -1,0 +1,18 @@
+---
+version: '2'
+services:
+    golang:
+        build: golang
+        volumes:
+            - "./volumes/go_src:/go/src"
+        environment:
+            GIT_USER_NAME:
+            GIT_USER_EMAIL:
+            USER_ID:
+            GROUP_ID:
+            USERNAME: dev
+            GROUPNAME: dev
+            HOMEDIR:
+            SSH_PRIVATE_KEY:
+            SSH_PUBLIC_KEY:
+        working_dir: "/go/src"
