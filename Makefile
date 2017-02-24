@@ -24,7 +24,7 @@ volumes:
 	mkdir -p volumes/go_src
 
 dkc-env: volumes
-	cp -n .env.dist .env
+	cp .env.dist .env
 
 # unit tests with docker
 dk-build: dkc-env
