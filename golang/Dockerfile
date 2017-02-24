@@ -13,6 +13,8 @@ RUN set -x \
     && chmod +x /usr/local/bin/gosu \
     && gosu nobody true
 
+RUN go get github.com/kardianos/govendor
+
 RUN groupadd -f -g 900 admin
 RUN echo '%admin ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
