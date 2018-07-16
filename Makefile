@@ -18,36 +18,36 @@ DK = docker
 .EXPORT_ALL_VARIABLES: ; # send all vars to shell
 default: all;   # default target
 
-.PHONY: all volumes dkc-env dkc-build dk-stop dk-rm _dk-rm dk-prune _upd
+.PHONY: all volumes env build stop rm _rm prune _upd
 
 volumes:
 	mkdir -p volumes/go_src
 
-dkc-env: volumes
+env: volumes
 	if [ ! -f .env  ]; then  cp .env.dist .env ; fi
 
 # unit tests with docker
-dk-build: dkc-env
+build: env
 	$(ENV) $(DKC) build
 
-dk-stop: dkc-env
+stop: env
 	$(ENV) $(DKC) stop
 
-dk-rm: dk-stop
-dk-rm: _dk-rm
+rm: stop
+rm: _rm
 
-_dk-rm: dkc-env
+_rm: env
 	$(ENV) $(DKC) rm -f -v
 
-dk-prune: dkc-env
+prune: env
 	$(ENV) $(DKC) down -v --remove-orphans
 
-dk-up: dkc-env
-dk-up: _dk-upd
-dk-up: dk-ps
+up: env
+up: _upd
+up: ps
 
-_dk-upd: dkc-env
+_upd: env
 	$(ENV) $(DKC) up -d --remove-orphans
 
-dk-ps: dkc-env
+ps: env
 	$(ENV) $(DKC) ps

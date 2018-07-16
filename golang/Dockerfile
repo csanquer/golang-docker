@@ -1,4 +1,5 @@
-FROM golang:1.8
+ADD SRC_TAG=1.10
+FROM golang:${SRC_TAG}
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
@@ -14,13 +15,16 @@ RUN set -x \
     && gosu nobody true
 
 RUN go get github.com/kardianos/govendor
+RUN go get github.com/canthefason/go-watcher
 
 RUN groupadd -f -g 900 admin
 RUN echo '%admin ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 COPY ssh_config /ssh_config
 
-COPY docker-entrypoint.sh /entrypoint.sh
+EXPOSE 4343
+
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh && chown root:root /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
