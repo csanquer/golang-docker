@@ -1,4 +1,4 @@
-ADD SRC_TAG=1.10
+ARG SRC_TAG=1.10
 FROM golang:${SRC_TAG}
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
