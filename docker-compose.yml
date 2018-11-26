@@ -6,10 +6,10 @@ services:
         ports:
             - "8080:8080"
         volumes:
-            - "./volumes/go_src:${GO_PROJECT_DIR}/app"
-        working_dir: "${GO_PROJECT_DIR}/app"
+            - "./volumes/go_src:${GO_PROJECT_DIR}"
+        working_dir: "${GO_PROJECT_DIR}"
         environment:
-            GO_WORK_DIR: "${GO_PROJECT_DIR}/app"
+            GO_WORK_DIR: "${GO_PROJECT_DIR}"
             GIT_USER_NAME:
             GIT_USER_EMAIL:
             USER_ID:

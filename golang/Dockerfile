@@ -27,6 +27,7 @@ RUN set -x \
 
 RUN go get github.com/kardianos/govendor
 RUN go get github.com/oxequa/realize
+RUN go get github.com/spf13/cobra/cobra
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh && chown root:root /entrypoint.sh

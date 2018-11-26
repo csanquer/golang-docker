@@ -9,6 +9,8 @@ HOMEDIR = /home/$(USERNAME)
 ENV = /usr/bin/env
 DKC = docker-compose
 DK = docker
+
+SERVICE = golang
 # default shell options
 .SHELLFLAGS = -c
 
@@ -18,7 +20,12 @@ DK = docker
 .EXPORT_ALL_VARIABLES: ; # send all vars to shell
 default: all;   # default target
 
-.PHONY: all volumes env build stop rm _rm prune _upd
+all:
+	$(MAKE) rm
+	$(MAKE) pull
+	$(MAKE) build
+	$(MAKE) up
+.PHONY: all
 
 volumes:
 	mkdir -p volumes/go_src
@@ -28,7 +35,10 @@ env: volumes
 	if [ ! -f .env  ]; then  cp .env.dist .env ; fi
 .PHONY: env
 
-# unit tests with docker
+pull: env
+	$(ENV) $(DKC) pull
+.PHONY: pull
+
 build: env
 	$(ENV) $(DKC) build
 .PHONY: build
@@ -59,9 +69,13 @@ ps: env
 .PHONY: ps
 
 logs:
-	$(ENV) $(DKC) logs -f  golang
+	$(ENV) $(DKC) logs -f $(SERVICE)
 .PHONY: logs
 
-cli:
-	$(ENV) $(DKC) run --rm golang bash
-.PHONY: cli
+run_cli:
+	$(ENV) $(DKC) run --rm $(SERVICE) bash
+.PHONY: run_cli
+
+exec_cli:
+	$(ENV) $(DKC) exec $(SERVICE) bash
+.PHONY: exec_cli
