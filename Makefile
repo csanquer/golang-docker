@@ -22,32 +22,46 @@ default: all;   # default target
 
 volumes:
 	mkdir -p volumes/go_src
+.PHONY: volumes
 
 env: volumes
 	if [ ! -f .env  ]; then  cp .env.dist .env ; fi
+.PHONY: env
 
 # unit tests with docker
 build: env
 	$(ENV) $(DKC) build
+.PHONY: build
 
 stop: env
 	$(ENV) $(DKC) stop
+.PHONY: stop
 
-rm: stop
-rm: _rm
-
-_rm: env
-	$(ENV) $(DKC) rm -f -v
+rm:
+	$(ENV) $(DKC) rm -f -s -v
+.PHONY: rm
 
 prune: env
 	$(ENV) $(DKC) down -v --remove-orphans
+.PHONY: prune
 
 up: env
 up: _upd
 up: ps
+.PHONY: up
 
 _upd: env
 	$(ENV) $(DKC) up -d --remove-orphans
+.PHONY: _upd
 
 ps: env
 	$(ENV) $(DKC) ps
+.PHONY: ps
+
+logs:
+	$(ENV) $(DKC) logs -f  golang
+.PHONY: logs
+
+cli:
+	$(ENV) $(DKC) run --rm golang bash
+.PHONY: cli

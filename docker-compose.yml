@@ -1,11 +1,15 @@
 ---
-version: '2'
+version: '3'
 services:
     golang:
         build: golang
+        ports:
+            - "8080:8080"
         volumes:
-            - "./volumes/go_src:/go/src"
+            - "./volumes/go_src:${GO_PROJECT_DIR}/app"
+        working_dir: "${GO_PROJECT_DIR}/app"
         environment:
+            GO_WORK_DIR: "${GO_PROJECT_DIR}/app"
             GIT_USER_NAME:
             GIT_USER_EMAIL:
             USER_ID:
@@ -15,4 +19,3 @@ services:
             HOMEDIR:
             SSH_PRIVATE_KEY:
             SSH_PUBLIC_KEY:
-        working_dir: "/go/src"

@@ -1,13 +1,24 @@
-ARG SRC_TAG=1.10
+ARG SRC_TAG=1.11-alpine
 FROM golang:${SRC_TAG}
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    wget \
-    git \
-    sudo
+RUN apk add --no-cache ca-certificates \
+        dpkg \
+        gcc \
+        git \
+        musl-dev \
+        shadow \
+        sudo \
+        bash
 
-ENV GOSU_VERSION 1.10
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" \
+    && chmod -R 777 "$GOPATH"
+
+WORKDIR $GOPATH
+
+ENV GOSU_VERSION 1.11
 RUN set -x \
     && dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
@@ -15,18 +26,11 @@ RUN set -x \
     && gosu nobody true
 
 RUN go get github.com/kardianos/govendor
-RUN go get github.com/canthefason/go-watcher
-
-RUN groupadd -f -g 900 admin
-RUN echo '%admin ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-COPY ssh_config /ssh_config
-
-EXPOSE 4343
+RUN go get github.com/oxequa/realize
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh && chown root:root /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
-WORKDIR /srv/apps
+CMD ["realize", "start"]
