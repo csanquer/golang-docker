@@ -52,5 +52,3 @@ mkdir -p $GO_WORK_DIR
 chown -R $USERNAME:$GROUPNAME $GO_WORK_DIR
 
 gosu $USERNAME "$@"
-
-# exec  "$@"

@@ -2,6 +2,9 @@ ARG SRC_TAG=1.11-alpine
 FROM golang:${SRC_TAG}
 
 RUN apk add --no-cache ca-certificates \
+        build-base \
+        abuild \
+        binutils \
         dpkg \
         gcc \
         git \
@@ -26,12 +29,14 @@ RUN set -x \
     && gosu nobody true
 
 RUN go get github.com/kardianos/govendor
-RUN go get github.com/oxequa/realize
+RUN go get github.com/cespare/reflex
 RUN go get github.com/spf13/cobra/cobra
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh && chown root:root /entrypoint.sh
 
+COPY reflex.conf /reflex.conf
+
 ENTRYPOINT ["/entrypoint.sh"]
 
-CMD ["realize", "start"]
+CMD ["reflex", "-c", "/reflex.conf"]
